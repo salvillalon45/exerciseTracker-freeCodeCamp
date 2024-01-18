@@ -1,5 +1,9 @@
 import express from 'express';
-import { getUsers, createNewUser } from '../controllers/usersController';
+import {
+	getUsers,
+	createNewUser,
+	createExercise
+} from '../controllers/usersController';
 
 // Create the router. Here we will add to the router
 export const router = express.Router();
@@ -8,3 +12,7 @@ export const router = express.Router();
 // ----------------------------------------
 router.post('/users', createNewUser);
 router.get('/users', getUsers);
+
+// USERS - EXERCISE
+// ----------------------------------------
+router.post('/users/:_id/exercises', createExercise);
