@@ -1,7 +1,9 @@
-import { PrismaClient } from '@prisma/client';
-import { findUserByID } from '../utils';
-
-const prisma = new PrismaClient();
+import {
+	checkDate,
+	createNewUserHelper,
+	findManyUsers,
+	findUserByID
+} from '../utils';
 
 // ---------------------------------------
 // USERS
@@ -9,7 +11,7 @@ const prisma = new PrismaClient();
 export async function getUsers(req: any, res: any, next: any) {
 	console.log('Inside get Users');
 	try {
-		const usersDB = await prisma.user.findMany();
+		const usersDB = await findManyUsers();
 
 		const users = usersDB.map((user) => {
 			const { username, id } = user;
@@ -34,13 +36,9 @@ export async function createNewUser(req: any, res: any, next: any) {
 	const { username: usernameInput } = req.body;
 	console.log({ usernameInput });
 	try {
-		const newUser = await prisma.user.create({
-			data: {
-				username: usernameInput
-			}
-		});
-		const { id, username } = newUser;
+		const newUser = await createNewUserHelper(usernameInput);
 
+		const { id, username } = newUser;
 		console.log('New User create!');
 		console.log(newUser);
 		res.status(200).json({
@@ -61,7 +59,8 @@ export async function createNewUser(req: any, res: any, next: any) {
 export async function createExercise(req: any, res: any, next: any) {
 	console.log('Inside createExercise');
 	const { description, duration } = req.body;
-	const date = req.body.date ?? new Date().toDateString();
+	const date = checkDate(req.body.date);
+
 	const { _id: userID } = req.params;
 
 	console.log({ description, duration, userID, date });
