@@ -5,18 +5,17 @@ const prisma = new PrismaClient();
 export async function getUsers(req: any, res: any, next: any) {
 	console.log('Inside get Users');
 
-	const users = await prisma.user.findMany();
-	const jsonWithUnderscoreId = users.map((user) => {
+	const usersDB = await prisma.user.findMany();
+	const jsonWithUnderscoreId = usersDB.map((user) => {
 		const { username, id } = user;
 		return {
 			username,
 			_id: id
 		};
 	});
+	const users = jsonWithUnderscoreId;
 
-	res.status(200).json({
-		users: jsonWithUnderscoreId
-	});
+	res.status(200).json(users);
 }
 
 export async function createNewUser(req: any, res: any, next: any) {
