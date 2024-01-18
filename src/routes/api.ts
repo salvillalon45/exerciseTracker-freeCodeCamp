@@ -5,5 +5,6 @@ import { getUsers, createNewUser } from '../controllers/usersController';
 export const router = express.Router();
 
 // USERS
+// ----------------------------------------
 router.post('users', createNewUser);
 router.get('/users', getUsers);
