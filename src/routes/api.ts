@@ -6,5 +6,5 @@ export const router = express.Router();
 
 // USERS
 // ----------------------------------------
-router.post('users', createNewUser);
+router.post('/users', createNewUser);
 router.get('/users', getUsers);
