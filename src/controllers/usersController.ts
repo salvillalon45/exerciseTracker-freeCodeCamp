@@ -71,7 +71,7 @@ export async function createExercise(req: any, res: any, next: any) {
 		res.status(200).json({
 			...foundUser,
 			description,
-			duration,
+			duration: parseInt(duration),
 			date
 		});
 	} catch (error) {

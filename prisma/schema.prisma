@@ -14,3 +14,10 @@ model User {
   id String @id @default(auto()) @map("_id") @db.ObjectId
   username String
 }
+
+model Exercise {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  description String
+  duration Int
+  date String?
+}

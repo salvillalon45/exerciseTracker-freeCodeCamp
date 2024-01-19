@@ -36,3 +36,12 @@ export async function createNewUserHelper(usernameInput: string) {
 	});
 	return newUser;
 }
+
+export async function createNewExercise(usernameInput: string) {
+	const newUser = await prisma.user.create({
+		data: {
+			username: usernameInput
+		}
+	});
+	return newUser;
+}
