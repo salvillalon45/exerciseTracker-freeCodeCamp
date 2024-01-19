@@ -11,18 +11,8 @@ import {
 // USERS
 // ---------------------------------------
 export async function getUsers(req: any, res: any, next: any) {
-	console.log('Inside get Users');
 	try {
-		const usersDB = await findManyUsers();
-
-		const users = usersDB.map((user) => {
-			const { username, id } = user;
-
-			return {
-				username,
-				_id: id
-			};
-		});
+		const users = await findManyUsers();
 
 		res.status(200).json(users);
 	} catch (error) {
@@ -34,15 +24,15 @@ export async function getUsers(req: any, res: any, next: any) {
 }
 
 export async function createNewUser(req: any, res: any, next: any) {
-	console.log('Inside createNewUser');
-	const { username: usernameInput } = req.body;
-	console.log({ usernameInput });
 	try {
-		const newUser = await createNewUserHelper(usernameInput);
+		const { username: usernameInput } = req.body;
 
+		const newUser = await createNewUserHelper(usernameInput);
 		const { id, username } = newUser;
+
 		console.log('New User create!');
 		console.log(newUser);
+
 		res.status(200).json({
 			_id: id,
 			username
@@ -60,14 +50,12 @@ export async function createNewUser(req: any, res: any, next: any) {
 // ---------------------------------------
 export async function createExercise(req: any, res: any, next: any) {
 	try {
-		console.log('Inside createExercise');
-
 		const { description, duration } = req.body;
 		const { _id: userID } = req.params;
 		const date = checkDate(req.body.date);
 
 		const foundUser = await findUserByID(userID);
-		createNewExercise(description, duration, date, userID);
+		await createNewExercise(description, duration, date, userID);
 
 		res.status(200).json({
 			...foundUser,
@@ -87,13 +75,16 @@ export async function createExercise(req: any, res: any, next: any) {
 // LOGS
 // ---------------------------------------
 export async function getUserExerciseLog(req: any, res: any, next: any) {
+	// GET /api/users/:_id/logs?[from][&to][&limit]
 	try {
-		console.log('Inside getUserExerciseLog');
 		const { _id: userID } = req.params;
+		const { from, to, limit } = req.query ?? {};
+		console.log({ from, to, limit });
+
 		const foundUser = await findUserByID(userID);
 		const exercises = await getUserExercises(userID);
-		const log = exercises.map((exercise) => {
-			const { description, duration, date } = exercise;
+
+		const log = exercises.map(({ description, duration, date }) => {
 			return { description, duration, date };
 		});
 

@@ -24,7 +24,14 @@ export async function findUserByID(userID: string) {
 }
 
 export async function findManyUsers() {
-	const users = await prisma.user.findMany();
+	const usersDB = await prisma.user.findMany();
+	const users = usersDB.map(({ username, id }) => {
+		return {
+			username,
+			_id: id
+		};
+	});
+
 	return users;
 }
 
@@ -58,11 +65,7 @@ export async function getUserExercises(userID: string) {
 	const exercises = await prisma.exercise.findMany({
 		where: {
 			userID
-			// {
-			// 	contains: 'Hello World'
-			// }
 		}
 	});
-	console.log({ exercises });
 	return exercises;
 }
