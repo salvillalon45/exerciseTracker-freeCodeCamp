@@ -37,11 +37,32 @@ export async function createNewUserHelper(usernameInput: string) {
 	return newUser;
 }
 
-export async function createNewExercise(usernameInput: string) {
-	const newUser = await prisma.user.create({
+export async function createNewExercise(
+	description: string,
+	duration: string,
+	date: string,
+	userID: string
+) {
+	const newExercise = await prisma.exercise.create({
 		data: {
-			username: usernameInput
+			description,
+			duration: parseInt(duration),
+			date,
+			userID
 		}
 	});
-	return newUser;
+	return newExercise;
+}
+
+export async function getUserExercises(userID: string) {
+	const exercises = await prisma.exercise.findMany({
+		where: {
+			userID
+			// {
+			// 	contains: 'Hello World'
+			// }
+		}
+	});
+	console.log({ exercises });
+	return exercises;
 }

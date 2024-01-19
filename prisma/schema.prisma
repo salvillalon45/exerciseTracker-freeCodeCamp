@@ -20,4 +20,5 @@ model Exercise {
   description String
   duration Int
   date String?
+  userID String
 }

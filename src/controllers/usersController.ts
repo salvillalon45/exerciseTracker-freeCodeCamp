@@ -1,8 +1,10 @@
 import {
 	checkDate,
+	createNewExercise,
 	createNewUserHelper,
 	findManyUsers,
-	findUserByID
+	findUserByID,
+	getUserExercises
 } from '../utils';
 
 // ---------------------------------------
@@ -57,16 +59,15 @@ export async function createNewUser(req: any, res: any, next: any) {
 // EXERCISES
 // ---------------------------------------
 export async function createExercise(req: any, res: any, next: any) {
-	console.log('Inside createExercise');
-	const { description, duration } = req.body;
-	const date = checkDate(req.body.date);
-
-	const { _id: userID } = req.params;
-
-	console.log({ description, duration, userID, date });
 	try {
+		console.log('Inside createExercise');
+
+		const { description, duration } = req.body;
+		const { _id: userID } = req.params;
+		const date = checkDate(req.body.date);
+
 		const foundUser = await findUserByID(userID);
-		console.log({ foundUser });
+		createNewExercise(description, duration, date, userID);
 
 		res.status(200).json({
 			...foundUser,
@@ -77,6 +78,33 @@ export async function createExercise(req: any, res: any, next: any) {
 	} catch (error) {
 		res.status(500).json({
 			message: 'Error in createExercise',
+			error
+		});
+	}
+}
+
+// ---------------------------------------
+// LOGS
+// ---------------------------------------
+export async function getUserExerciseLog(req: any, res: any, next: any) {
+	try {
+		console.log('Inside getUserExerciseLog');
+		const { _id: userID } = req.params;
+		const foundUser = await findUserByID(userID);
+		const exercises = await getUserExercises(userID);
+		const log = exercises.map((exercise) => {
+			const { description, duration, date } = exercise;
+			return { description, duration, date };
+		});
+
+		res.status(200).json({
+			...foundUser,
+			count: exercises.length,
+			log
+		});
+	} catch (error) {
+		res.status(500).json({
+			message: 'Error in getUserExerciseLog',
 			error
 		});
 	}
