@@ -95,8 +95,7 @@ export async function getUserExerciseLog(req: any, res: any, next: any) {
 
 		res.status(200).json({
 			...foundUser,
-			count: log.length,
-			log
+			count: log.length
 		});
 	} catch (error) {
 		console.log(error);
