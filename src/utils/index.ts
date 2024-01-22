@@ -13,13 +13,15 @@ export async function findUserByID(userID: string) {
 	const user = await prisma.user.findUnique({
 		where: {
 			id: userID
-		}
+		},
+		include: { log: true }
 	});
-	const { id, username } = user ?? {};
+	const { id, username, log } = user ?? {};
 
 	return {
 		_id: id,
-		username
+		username,
+		log
 	};
 }
 
@@ -61,11 +63,19 @@ export async function createNewExercise(
 	return newExercise;
 }
 
-export async function getUserExercises(userID: string) {
-	const exercises = await prisma.exercise.findMany({
-		where: {
+export async function createNewLog(
+	description: string,
+	duration: string,
+	date: string,
+	userID: string
+) {
+	const newLog = await prisma.log.create({
+		data: {
+			description,
+			duration: parseInt(duration),
+			date,
 			userID
 		}
 	});
-	return exercises;
+	return newLog;
 }

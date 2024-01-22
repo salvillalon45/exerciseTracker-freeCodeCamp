@@ -10,15 +10,25 @@ generator client {
   provider = "prisma-client-js"
 }
 
+model Log {
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
+  description String
+  duration    Int
+  date        String
+  userID      String? @db.ObjectId
+  User        User?   @relation(fields: [userID], references: [id])
+}
+
 model User {
-  id String @id @default(auto()) @map("_id") @db.ObjectId
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
   username String
+  log      Log[]
 }
 
 model Exercise {
-  id String @id @default(auto()) @map("_id") @db.ObjectId
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
   description String
-  duration Int
-  date String?
-  userID String
+  duration    Int
+  date        String?
+  userID      String
 }

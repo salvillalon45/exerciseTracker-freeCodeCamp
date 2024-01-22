@@ -1,10 +1,10 @@
 import {
 	checkDate,
 	createNewExercise,
+	createNewLog,
 	createNewUserHelper,
 	findManyUsers,
-	findUserByID,
-	getUserExercises
+	findUserByID
 } from '../utils';
 
 // ---------------------------------------
@@ -16,6 +16,7 @@ export async function getUsers(req: any, res: any, next: any) {
 
 		res.status(200).json(users);
 	} catch (error) {
+		console.log(error);
 		res.status(500).json({
 			message: 'Error in getUsers',
 			error
@@ -38,6 +39,7 @@ export async function createNewUser(req: any, res: any, next: any) {
 			username
 		});
 	} catch (error) {
+		console.log(error);
 		res.status(500).json({
 			message: 'Error in createUser',
 			error
@@ -54,8 +56,12 @@ export async function createExercise(req: any, res: any, next: any) {
 		const { _id: userID } = req.params;
 		const date = checkDate(req.body.date);
 
-		const foundUser = await findUserByID(userID);
 		await createNewExercise(description, duration, date, userID);
+		await createNewLog(description, duration, date, userID);
+
+		const foundUser = await findUserByID(userID);
+		console.log('What is foundUser');
+		console.log(foundUser);
 
 		res.status(200).json({
 			...foundUser,
@@ -64,6 +70,7 @@ export async function createExercise(req: any, res: any, next: any) {
 			date
 		});
 	} catch (error) {
+		console.log(error);
 		res.status(500).json({
 			message: 'Error in createExercise',
 			error
@@ -82,18 +89,15 @@ export async function getUserExerciseLog(req: any, res: any, next: any) {
 		console.log({ from, to, limit });
 
 		const foundUser = await findUserByID(userID);
-		const exercises = await getUserExercises(userID);
-
-		const log = exercises.map(({ description, duration, date }) => {
-			return { description, duration, date };
-		});
+		const log = foundUser.log ?? [];
 
 		res.status(200).json({
 			...foundUser,
-			count: exercises.length,
+			count: log.length,
 			log
 		});
 	} catch (error) {
+		console.log(error);
 		res.status(500).json({
 			message: 'Error in getUserExerciseLog',
 			error
