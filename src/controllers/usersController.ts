@@ -60,11 +60,13 @@ export async function createExercise(req: any, res: any, next: any) {
 		await createNewLog(description, duration, date, userID);
 
 		const foundUser = await findUserByID(userID);
+		const { _id, username } = foundUser;
 		console.log('What is foundUser');
 		console.log(foundUser);
 
 		res.status(200).json({
-			...foundUser,
+			_id,
+			username,
 			description,
 			duration: parseInt(duration),
 			date
