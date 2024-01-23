@@ -55,9 +55,10 @@ export async function createExercise(req: any, res: any, next: any) {
 		const { description, duration } = req.body;
 		const { _id: userID } = req.params;
 		const date = checkDate(req.body.date);
+		const durationInt = parseInt(duration);
 
-		await createNewExercise(description, duration, date, userID);
-		await createNewLog(description, duration, date, userID);
+		await createNewExercise(description, durationInt, date, userID);
+		await createNewLog(description, durationInt, date, userID);
 
 		const foundUser = await findUserByID(userID);
 		const { _id, username } = foundUser;
@@ -68,7 +69,7 @@ export async function createExercise(req: any, res: any, next: any) {
 			_id,
 			username,
 			description,
-			duration: parseInt(duration),
+			duration: durationInt,
 			date
 		});
 	} catch (error) {
@@ -84,14 +85,13 @@ export async function createExercise(req: any, res: any, next: any) {
 // LOGS
 // ---------------------------------------
 export async function getUserExerciseLog(req: any, res: any, next: any) {
-	// GET /api/users/:_id/logs?[from][&to][&limit]
 	try {
 		const { _id: userID } = req.params;
 		const { from, to, limit } = req.query ?? {};
-		console.log({ from, to, limit });
 
 		const foundUser = await findUserByID(userID);
 		let logs = foundUser.log ?? [];
+		console.log(foundUser);
 
 		// Check for query params
 		// Check for from

@@ -48,14 +48,14 @@ export async function createNewUserHelper(usernameInput: string) {
 
 export async function createNewExercise(
 	description: string,
-	duration: string,
+	duration: number,
 	date: string,
 	userID: string
 ) {
 	const newExercise = await prisma.exercise.create({
 		data: {
 			description,
-			duration: parseInt(duration),
+			duration,
 			date,
 			userID
 		}
@@ -65,14 +65,14 @@ export async function createNewExercise(
 
 export async function createNewLog(
 	description: string,
-	duration: string,
+	duration: number,
 	date: string,
 	userID: string
 ) {
 	const newLog = await prisma.log.create({
 		data: {
 			description,
-			duration: parseInt(duration),
+			duration,
 			date,
 			userID
 		}
