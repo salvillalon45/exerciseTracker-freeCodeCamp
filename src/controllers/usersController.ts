@@ -1,11 +1,11 @@
 import {
-	checkDate,
 	createNewExercise,
 	createNewLog,
 	createNewUserHelper,
 	findManyUsers,
 	findUserByID
-} from '../utils';
+} from '../utils/apiUtils';
+import { checkDate, isValidDateInput } from '../utils';
 
 // ---------------------------------------
 // USERS
@@ -91,11 +91,32 @@ export async function getUserExerciseLog(req: any, res: any, next: any) {
 		console.log({ from, to, limit });
 
 		const foundUser = await findUserByID(userID);
-		const log = foundUser.log ?? [];
+		let logs = foundUser.log ?? [];
+
+		// Check for query params
+		// Check for from
+		if (isValidDateInput(from)) {
+			logs = logs.filter(({ date }) => {
+				return Date.parse(date) >= Date.parse(from);
+			});
+		}
+		// Check for to
+		if (isValidDateInput(to)) {
+			logs = logs.filter(({ date }) => {
+				return Date.parse(date) <= Date.parse(to);
+			});
+		}
+		// Check for limit
+		const limitCheck = parseInt(limit);
+		if (limitCheck) {
+			// They entered a number!
+			logs = logs.slice(0, limit);
+		}
 
 		res.status(200).json({
 			...foundUser,
-			count: log.length
+			count: logs.length,
+			log: logs
 		});
 	} catch (error) {
 		console.log(error);
