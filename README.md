@@ -95,8 +95,9 @@ It has the following routes:
 -   Use [this repo](https://replit.com/@juanrozo89/exercise-tracker#index.js) for guidance on the to, from, and limit query. Thank you @juanrozo89!
 
 ### Demo
+https://github.com/salvillalon45/exerciseTracker-freeCodeCamp/assets/18276475/01ade50a-9c5b-4869-a4fe-9c7b599a30be
 
-<img alt="Exercise Tracker Demo" src="./docs/exercise_tracker_demo.mp4" width="600" />
+
 
 # Technologies:
 
