@@ -30,6 +30,10 @@ export async function findManyUsers() {
 	const users = usersDB.map(({ username, id }) => {
 		return {
 			username,
+			/*
+				We do this since the test require an id with an underscore! Prisma 
+				keeps their id with no underscore in the beginning
+			*/
 			_id: id
 		};
 	});

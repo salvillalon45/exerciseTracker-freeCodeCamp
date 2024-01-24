@@ -14,7 +14,7 @@ It has the following routes:
 
 -   **/api/users**
     -   **GET**: Get a list of users
-    -   **POST**: Pass in a `username` in the form data to create a new user. The response from this request will be an object withe username and \_id properties
+    -   **POST**: Pass in a `username` in the form data to create a new user. The response from this request will be an object withe `username` and `_id` properties
     -   Response Example
     ```
     {
@@ -23,7 +23,7 @@ It has the following routes:
     }
     ```
 -   **/api/users/:\_id/exercises**
-    -   **POST**: With form data `description`, `duration`, and optionally `date`. If no date is supplied, the current date will be used. It will create a new exercise for the user. The response from this request will be a `user` object with the exercise fields added.
+    -   **POST**: With form data `description`, `duration`, and optionally `date`. If no `date` is supplied, the current `date` will be used. It will create a new exercise for the user. The response from this request will be a `user` object with the `exercise fields` added.
     -   Response Example
     ```
     {
@@ -67,20 +67,36 @@ It has the following routes:
 -   Created four routes along with their api handlers:
     -   `router.post('/users', createNewUser);`
     -   `router.get('/users', getUsers);`
-    -   `router.post('/users/:\_id/exercises', createExercise);`
-    -   `router.get('/users/:\_id/logs', getUserExerciseLog);`
+    -   `router.post('/users/:_id/exercises', createExercise);`
+    -   `router.get('/users/:_id/logs', getUserExerciseLog);`
 
 ### Lessons Learned
 
 -   This was my first time using Prisma and it very easy to use. I noticed that when I created a new `Log` entity. It was automatically inserted into the `User` `log` field. I still need to investiage why that happend. Is it due to the `relation` that the `User` and `Log` schemas have with each other?
+-   Object-Relational Mapping (ORM): It is a programming technique that allows developers to interact with a relational database using an object-oriented programming language. Here we use Prisma to bridge the gap between `MongoDB` and `TypeScript`. With Prisma I could use `TypeScript` code to make queries! This is different from just doing straight SQL queries in the code.
+-   Object-Document Mapping (ODM): A concept similar to ORM, but ODM is for `NoSQL` databases. I will use `Mongoose` in my projects a lot. Using `Mongoose` with `MongoDB` is a better developer experience since `Mongoose` is intended for `MongoDB`! While Prisma supports mainly relational dbs.
+-   MongoDB stores their `id` field with an underscore like so `_id`. Prisma keeps their `id` with no underscore. For the tests to pass I had to switch each `id` to `_id`.
+    -   Example
+    ```
+    const users = usersDB.map(({ username, id }) => {
+    	return {
+    		username,
+    		_id: id
+    	};
+    })
+    ```
 
 ### Resources
 
--   Needed to learn how to distinguish between Prisma and Mongoose: https://www.prisma.io/docs/orm/more/comparisons/prisma-and-mongoose
+-   Use the [Prisma Quickstart guide](https://www.prisma.io/docs/getting-started/quickstart)!
+-   Needed to learn how to distinguish between Prisma and Mongoose. Use this [documenation](https://www.prisma.io/docs/orm/more/comparisons/prisma-and-mongoose) to learn from!
+-   `Date.parse()`: This parses the string representation of a date and returns the date timestamp in a number! This is great when trying to compare two dates! This was done in the `getUserExerciseLog` api handler where I was comparing the `to` and `from` query params to filter out the dates
+-   `Number.isInteger()`: Did not use it in the code, but this determines whether the input is an integer or not!
+-   Use [this repo](https://replit.com/@juanrozo89/exercise-tracker#index.js) for guidance on the to, from, and limit query. Thank you @juanrozo89!
 
 ### Demo
 
-<img alt="Url Shortener Demo" src="./url_shortener_demo.mp4" width="600" />
+<img alt="Exercise Tracker Demo" src="./docs/exercise_tracker_demo.mp4" width="600" />
 
 # Technologies:
 
