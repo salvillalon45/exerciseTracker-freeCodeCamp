@@ -106,3 +106,5 @@ https://github.com/salvillalon45/exerciseTracker-freeCodeCamp/assets/18276475/01
 -   Render
 -   MongoDB
 -   Prisma
+-   NodeJS
+-   ExpressJS
